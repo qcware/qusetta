@@ -1,7 +1,7 @@
 qusetta
 =======
 
-Translations quantum circuits to and from representations -- the Rosetta Stone for quantum circuits.
+Translating quantum circuits to and from representations -- the Rosetta Stone for quantum circuits.
 
 .. |master_branch_circleci| image:: https://circleci.com/gh/qcware/qusetta/tree/master.svg?style=svg&circle-token=aee09028070dbb276e20c86a128132334f00a037
     :target: https://circleci.com/gh/qcware/qusetta/tree/master
