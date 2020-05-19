@@ -17,8 +17,8 @@ __all__ = "Qiskit",
 #     # p = params, r = register
 #     # params should be array of 3 angles in (0, 4pi).
 #     # register is which register to apply gate to.
-#     "rz(%g, %d)" % (p[1], r), 
-#     "ry(%g, %d)" % (p[0], r), 
+#     "rz(%g, %d)" % (p[1], r),
+#     "ry(%g, %d)" % (p[0], r),
 #     "rz(%g, %d)" % (p[2], r)
 # ]
 

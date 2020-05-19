@@ -3,12 +3,12 @@ qusetta
 
 Translations quantum circuits to and from representations -- the Rosetta Stone for quantum circuits.
 
-.. |master_branch_circleci| image:: https://circleci.com/gh/qcware/qusetta/tree/master.svg?style=svg&circle-token=TOKEN
+.. |master_branch_circleci| image:: https://circleci.com/gh/qcware/qusetta/tree/master.svg?style=svg&circle-token=aee09028070dbb276e20c86a128132334f00a037
     :target: https://circleci.com/gh/qcware/qusetta/tree/master
 
 *master branch*  --->   |master_branch_circleci|
 
-*Circle CI fails right now because I have it just trying to import "quasar". Once quasar is open-sourced, then the Circle CI should start passing.
+*Circle CI fails right now because I have it just trying to import "quasar". Once quasar is open-sourced, then the Circle CI should start passing.*
 
 **README contents**
 
@@ -29,8 +29,8 @@ To install from source:
     pip install -e .
 
 
-Examle usage
-------------
+Example usage
+-------------
 
 Please see ``help(qusetta)`` for all the functionality in ``qusetta``. The circuit representations that we support converting between are listed in ``qusetta.__all__``.
 
@@ -74,4 +74,3 @@ To do
   Once those are in place, the code's infrastructure already takes care of qiskit to/from cirq to/from quasar etc.
 
 - I also probably need to support for more gates, and figure out something to do with measure gates.
-- Once Circle CI is up and running (I think I'll wait until quasar is open-sourced so that it's easy to list it in the requirements.txt file), then I need to create the token for the badge and replace TOKEN in the README.rst.
