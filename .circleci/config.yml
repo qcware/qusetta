@@ -1,0 +1,24 @@
+version: 2
+
+jobs:
+  toxify:
+    docker:
+      - image: themattrix/tox
+    steps:
+      - checkout
+      - run: tox
+      - store_artifacts:
+          path: htmlcov
+  codestyle:
+    docker:
+      - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - run: make test_codestyle
+
+workflows:
+  version: 2
+  run-tests:
+    jobs:
+      - toxify
+      - codestyle

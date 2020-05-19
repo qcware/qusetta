@@ -1,0 +1,3 @@
+cirq>=0.8.0
+qiskit>=0.14.0
+quasar
