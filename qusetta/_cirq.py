@@ -6,8 +6,8 @@ import cirq
 import qusetta as qu
 from typing import List
 from math import pi as PI
-# define pi so that in string gates we can have pi as an angle.
-# Because we use eval for string gates. For example, gate = "Rz(pi/2, 1)".
+# define PI so that in string gates we can have pi as an angle.
+# Because we use eval for string gates. For example, gate = "Rz(PI/2, 1)".
 
 
 __all__ = "Cirq",
@@ -40,7 +40,7 @@ class Cirq(qu.Conversions):
         Parameters
         ----------
         circuit : list of strings.
-            See ``help(qusetta.Qusetta)`` for more details on how the list of
+            See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
         Returns
@@ -90,7 +90,7 @@ class Cirq(qu.Conversions):
         Returns
         -------
         qu_circuit : list of strings.
-            See ``help(qusetta.Qusetta)`` for more details on how the list of
+            See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
         Examples

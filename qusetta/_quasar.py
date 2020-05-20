@@ -5,9 +5,9 @@
 import quasar
 import qusetta as qu
 from typing import List
-from math import pi
-# define pi so that in string gates we can have pi as an angle.
-# Because we use eval for string gates. For example, gate = "Rz(pi/2, 1)".
+from math import pi as PI
+# define PI so that in string gates we can have pi as an angle.
+# Because we use eval for string gates. For example, gate = "Rz(PI/2, 1)".
 
 
 __all__ = "Quasar",
@@ -39,7 +39,7 @@ class Quasar(qu.Conversions):
         Parameters
         ----------
         circuit : list of strings.
-            See ``help(qusetta.Qusetta)`` for more details on how the list of
+            See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
         Returns
@@ -67,7 +67,7 @@ class Quasar(qu.Conversions):
         Returns
         -------
         qu_circuit : list of strings.
-            See ``help(qusetta.Qusetta)`` for more details on how the list of
+            See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
         Examples

@@ -50,7 +50,7 @@ class Conversions:
         cirq_circuit : cirq.Circuit object.
 
         """
-        return qu.Qusetta.to_cirq(cls.to_qusetta(circuit))
+        return qu.Cirq.from_qusetta(cls.to_qusetta(circuit))
 
     @classmethod
     def from_qiskit(cls, circuit: qiskit.QuantumCircuit) -> 'cls':
@@ -82,7 +82,7 @@ class Conversions:
         qiskit_circuit : qiskit.QuantumCircuit object.
 
         """
-        return qu.Qusetta.to_qiskit(cls.to_qusetta(circuit))
+        return qu.Qiskit.from_qusetta(cls.to_qusetta(circuit))
 
     @classmethod
     def from_quasar(cls, circuit: quasar.Circuit) -> 'cls':
@@ -114,4 +114,4 @@ class Conversions:
         quasar_circuit : quasar.Circuit object.
 
         """
-        return qu.Qusetta.to_quasar(cls.to_qusetta(circuit))
+        return qu.Quasar.from_qusetta(cls.to_qusetta(circuit))

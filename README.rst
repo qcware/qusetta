@@ -62,6 +62,13 @@ Contributing
 
 Create a branch or fork the repo, add your functionality and tests, and submit a pull request. Before submitting any pull requests, please check the coverage report (located in the *Artifacts* tab on CircleCI of the test workflow; look for the ``index.html`` file) to ensure that you are testing the new functionality sufficiently.
 
+To add a new circuit representation (call it ``A``), you need to
+
+- add the ``to_A`` and ``from_A`` classmethods in the ``_conversions.py`` file.
+- add a class ``A`` in a new file ``_a.py`` that has ``to_qusetta`` and ``from_qusetta`` staticmethods. The class should inherit from ``qusetta.Conversions``. 
+
+With those defined, all the circuit representations will be able to translate to/from the new representation ``A``.
+
 
 To do
 -----
