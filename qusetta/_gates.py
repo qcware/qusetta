@@ -15,7 +15,7 @@ PARAMETER_FREE_GATES = frozenset({
 PARAMETER_GATES = frozenset({'RX', 'RY', 'RZ'})
 
 
-def gate_info(gate: str) -> Tuple[str, Tuple[float], Tuple[int]]:
+def gate_info(gate: str) -> Tuple[str, Tuple[float, ...], Tuple[int, ...]]:
     """Get the gate info from a string gate.
 
     Parameters
