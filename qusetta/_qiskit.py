@@ -1,18 +1,14 @@
-"""Translating circuits to and from ``qiskit``.
-
-"""
+"""Translating circuits to and from ``qiskit``."""
 
 import qiskit
 import qusetta as qu
 from typing import List
-from math import pi as PI
-# define PI so that in string gates we can have pi as an angle.
-# Because we use eval for string gates. For example, gate = "Rz(PI/2, 1)".
 
 
 __all__ = "Qiskit",
 
 
+# TODO: support u3
 # u3 = lambda p, r: [
 #     # p = params, r = register
 #     # params should be array of 3 angles in (0, 4pi).
@@ -64,7 +60,20 @@ class Qiskit(qu.Conversions):
         >>> qiskit_circuit = Qiskit.from_qusetta(circuit)
 
         """
-        raise NotImplementedError
+        n, new_circuit = -1, []
+        for gate in circuit:
+            g, params, qubits = qu.gate_info(gate)
+            n = max(max(qubits), n)
+            new_circuit.append((g.lower(), params, qubits))
+
+        qiskit_circuit = qiskit.QuantumCircuit(n + 1)
+        for g, params, qubits in new_circuit:
+            # ibm is weird and reversed their qubits from everyone else.
+            # So we reverse them here.
+            qubits = tuple(n - q for q in qubits)
+            getattr(qiskit_circuit, g)(*(params + qubits))
+
+        return qiskit_circuit
 
     @staticmethod
     def to_qusetta(circuit: qiskit.QuantumCircuit) -> List[str]:
@@ -95,5 +104,18 @@ class Qiskit(qu.Conversions):
         ["H(0)", "CX(0, 1)", "RX(0.5)(0)", "SWAP(1, 2)"]
 
         """
-        # check the result above after I implement it!
-        raise NotImplementedError
+        qu_circuit = []
+        for gate, qubits, _ in circuit:  # _ refers to classical bits
+            g = gate.name.upper()
+            if g == "ID":
+                g = "I"
+            if gate.params:
+                g += "(" + ", ".join(str(x) for x in gate.params) + ")"
+            # ibm is weird and reversed their qubits from everyone else.
+            # So we reverse them here.
+            g += "(" + ", ".join(
+                str(circuit.num_qubits - q.index - 1)
+                for q in qubits
+            ) + ")"
+            qu_circuit.append(g)
+        return qu_circuit

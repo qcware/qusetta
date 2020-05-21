@@ -34,20 +34,23 @@ Example usage
 
 Please see ``help(qusetta)`` for all the functionality in ``qusetta``. The circuit representations that we support converting between are listed in ``qusetta.__all__``.
 
-Let's create a Qiskit circuit.
+Convert a qiskit circuit to cirq and quasar
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's create a qiskit circuit.
 
 .. code:: python
 
     from qiskit import QuantumCircuit
 
-    circuit = QuantumCircuit(3)
+    circuit = QuantumCircuit(2)
     circuit.h(0)
     circuit.cx(0, 1)
     circuit.rx(1.2, 1)
     circuit.z(1)
 
 
-Now we'll convert it to Cirq and Quasar.
+Now we'll convert it to cirq and quasar.
 
 .. code:: python
 
@@ -55,6 +58,62 @@ Now we'll convert it to Cirq and Quasar.
 
     cirq_circuit = Qiskit.to_cirq(circuit)
     quasar_circuit = Qiskit.to_quasar(circuit)
+
+Or equivalently we could have done
+
+.. code:: python
+
+    from qusetta import Cirq, Quasar
+
+    cirq_circuit = Cirq.from_qiskit(circuit)
+    quasar_circuit = Quasar.from_qiskit(circuit)
+
+
+We can also convert it to a *qusetta* circuit (see the next section).
+
+.. code:: python
+    
+    from qusetta import Qiskit
+    qusetta_circuit = Qiskit.to_qusetta(circuit)
+
+
+Create qiskit, cirq, and quasar circuits from a qusetta circuit
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A *qusetta* circuit is simply a list of strings, all uppercase, where each string represents a gate. For example,
+
+- a Hadamard gate on qubit 0 looks like :code:`"H(0)"`,
+- a CX gate with qubit 0 being the control and qubit 2 the target looks like :code:`"CX(0, 2)"`,
+- an Rx gate by an angle of 1.2 on qubit 1 looks like :code:`"RX(1.2)(1)"` (note that the parameters and qubits go in separate parenthese),
+- an Rz gate by an angle of pi/4 on qubit 0 looks like :code:`"RZ(PI/2)(0)"` (note how qusetta can evaluate the expression `PI/2`),
+- etc.
+
+We can specify our circuit in *qusetta* form, and then translate it to all the other circuit types.
+
+.. code:: python
+
+    from qusetta import Qiskit, Cirq, Quasar
+
+    qusetta_circuit = ["H(0)", "CX(0, 1)", "RY(PI/3, 2)", "T(1)", "S(0)"]
+
+    qiskit_circuit = Qiskit.from_qusetta(qusetta_circuit)
+    cirq_circuit = Cirq.from_qusetta(qusetta_circuit)
+    quasar_circuit = Quasar.from_qusetta(qusetta_circuit)
+
+
+Important details about the translation
+---------------------------------------
+
+Consider starting with a circuit cA written with A (e.g. A could be cirq, qiskit, etc). Then we use *qusetta* to translate to B, C, etc, therefore creating cB, cC, etc. The translations are defined such that simulating cA with A will give the same probability vector as simulating cB with B, cC with C, etc. A few things to note.
+
+- The simulations will give the same *probability vector* but not necessarily give the same *state vector*; they may be off by global phases.
+- As we all know, qiskit is weird in the way that they index their qubits. In particular, they index qubits in reverse order compared to everyone else. Therefore, in order to ensure that the first bullet point is true, *qusetta* reverses the qubits of a qiskit circuit. Thus, as an example, a qusetta (or cirq, quasar) circuit ``["H(0)", "CX(0, 1)"]`` becomes a qiskit circuit ``["H(1)", "CX(1, 0)"]``. This is how we guarantee that the probability vectors are the same.
+
+
+A note on the purpose of qusetta
+--------------------------------
+
+It is my personal opinion that something like *qusetta* shouldn't really exist, or at least should not be assumed to be rigorous. From the perspective of QC Ware, I think we should be encouraging users to adopt quasar rather than encouraging them to translate their qiskit/cirq/etc circuits to quasar. Any act of translation necessarily loses some of the features unique to each circuit type (as an example, qiskit allows for classical registers and feedback, but neither cirq nor quasar to my knowledge allow this). Therefore, people should only use *qusetta* when their circuits are very basic; if a user wants to include more advanced features in their circuit, then they are clearly advanced enough to do the translation themselves. All this being said, there are many features missing from *qusetta* that would allow better translation between circuit types. After all, *qusetta*'s internal representation of circuits is just a list of strings; if a circuit is too complicated to reasonably represent with such a data structure, then it should be written in one of the actual quantum programming languages!
 
 
 Contributing
@@ -69,15 +128,12 @@ To add a new circuit representation (call it ``A``), you need to
 
 With those defined, all the circuit representations will be able to translate to/from the new representation ``A``.
 
+Then you need to add tests for translating to and from all of the other circuit types. Follow the pattern in ``tests/test_translation.py`` and add to it.
+
 
 To do
 -----
 
-- Currently I only have circuit translation to/from cirq from/to qusetta (where the qusetta representation is the internal representation we use). I need to add functions for
-
-  - qiskit to/from qusetta, and
-  - quasar to/from qusetta.
-
-  Once those are in place, the code's infrastructure already takes care of qiskit to/from cirq to/from quasar etc.
-
-- I also probably need to support for more gates, and figure out something to do with measure gates.
+- Do something with measurement gates.
+- I also probably need to support for more gates, like qiskit u3 gates.
+- Add more circuit tests (e.g. ``test_circuit_1``, ``test_circuit_2``, etc).

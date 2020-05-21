@@ -1,5 +1,8 @@
 """Test the translation functionality.
 
+Phases and exact gates may be different in the circuit, but the
+resulting probability distribution is the same; that's all we care about.
+
 """
 
 import cirq
@@ -7,100 +10,269 @@ import qiskit
 import quasar
 import qusetta as qu
 from math import pi
+import numpy as np
+import random
 
 
-def qu_circuit():
-    return [
+class Simulator:
+
+    cirq_backend = cirq.Simulator()
+    qiskit_backend = qiskit.BasicAer.get_backend('statevector_simulator')
+    quasar_backend = quasar.QuasarSimulatorBackend()
+
+    @staticmethod
+    def cirq(circuit: cirq.Circuit) -> np.ndarray:
+        return Simulator.cirq_backend.simulate(circuit).final_state
+
+    @staticmethod
+    def qiskit(circuit: qiskit.QuantumCircuit) -> np.ndarray:
+        return qiskit.execute(
+            circuit, Simulator.qiskit_backend
+        ).result().get_statevector()
+
+    @staticmethod
+    def quasar(circuit: quasar.Circuit) -> np.ndarray:
+        return Simulator.quasar_backend.run_statevector(circuit)
+
+
+def assert_equal(c0, c1, simulator0, simulator1=None):
+    simulator1 = simulator1 or simulator0
+    np.testing.assert_allclose(
+        np.abs(simulator0(c0)) ** 2,
+        np.abs(simulator1(c1)) ** 2,
+        atol=1e-5, rtol=0
+    )
+
+
+# begin test functions that work on arbitrary circuits
+
+
+def cirq_vs_qusetta(cirq_circuit, qusetta_circuit):
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_qusetta(qusetta_circuit),
+        Simulator.cirq
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_qusetta(qu.Cirq.to_qusetta(cirq_circuit)),
+        Simulator.cirq
+    )
+
+
+def qiskit_vs_qusetta(qiskit_circuit, qusetta_circuit):
+    assert_equal(
+        qiskit_circuit,
+        qu.Qiskit.from_qusetta(qusetta_circuit),
+        Simulator.qiskit
+    )
+    assert_equal(
+        qiskit_circuit,
+        qu.Qiskit.from_qusetta(qu.Qiskit.to_qusetta(qiskit_circuit)),
+        Simulator.qiskit
+    )
+
+
+def quasar_vs_qusetta(quasar_circuit, qusetta_circuit):
+    assert_equal(
+        quasar_circuit,
+        qu.Quasar.from_qusetta(qusetta_circuit),
+        Simulator.quasar
+    )
+    assert_equal(
+        quasar_circuit,
+        qu.Quasar.from_qusetta(qu.Quasar.to_qusetta(quasar_circuit)),
+        Simulator.quasar
+    )
+
+
+def cirq_vs_qiskit(cirq_circuit, qiskit_circuit):
+    assert_equal(
+        cirq_circuit,
+        qiskit_circuit,
+        Simulator.cirq,
+        Simulator.qiskit
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Qiskit.to_cirq(qiskit_circuit),
+        Simulator.cirq
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_qiskit(qiskit_circuit),
+        Simulator.cirq
+    )
+    assert_equal(
+        qu.Qiskit.from_cirq(cirq_circuit),
+        qiskit_circuit,
+        Simulator.qiskit
+    )
+    assert_equal(
+        qu.Cirq.to_qiskit(cirq_circuit),
+        qiskit_circuit,
+        Simulator.qiskit
+    )
+    assert_equal(
+        qiskit_circuit,
+        qu.Qiskit.from_cirq(qu.Qiskit.to_cirq(qiskit_circuit)),
+        Simulator.qiskit
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_qiskit(qu.Cirq.to_qiskit(cirq_circuit)),
+        Simulator.cirq
+    )
+
+
+def cirq_vs_quasar(cirq_circuit, quasar_circuit):
+    assert_equal(
+        cirq_circuit,
+        quasar_circuit,
+        Simulator.cirq,
+        Simulator.quasar
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Quasar.to_cirq(quasar_circuit),
+        Simulator.cirq
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_quasar(quasar_circuit),
+        Simulator.cirq
+    )
+    assert_equal(
+        qu.Quasar.from_cirq(cirq_circuit),
+        quasar_circuit,
+        Simulator.quasar
+    )
+    assert_equal(
+        qu.Cirq.to_quasar(cirq_circuit),
+        quasar_circuit,
+        Simulator.quasar
+    )
+    assert_equal(
+        quasar_circuit,
+        qu.Quasar.from_cirq(qu.Quasar.to_cirq(quasar_circuit)),
+        Simulator.quasar
+    )
+    assert_equal(
+        cirq_circuit,
+        qu.Cirq.from_quasar(qu.Cirq.to_quasar(cirq_circuit)),
+        Simulator.cirq
+    )
+
+
+def qiskit_vs_quasar(qiskit_circuit, quasar_circuit):
+    assert_equal(
+        qiskit_circuit,
+        quasar_circuit,
+        Simulator.qiskit,
+        Simulator.quasar
+    )
+    assert_equal(
+        qiskit_circuit,
+        qu.Quasar.to_qiskit(quasar_circuit),
+        Simulator.qiskit
+    )
+    assert_equal(
+        qiskit_circuit,
+        qu.Qiskit.from_quasar(quasar_circuit),
+        Simulator.qiskit
+    )
+    assert_equal(
+        qu.Quasar.from_qiskit(qiskit_circuit),
+        quasar_circuit,
+        Simulator.quasar
+    )
+    assert_equal(
+        qu.Qiskit.to_quasar(qiskit_circuit),
+        quasar_circuit,
+        Simulator.quasar
+    )
+    assert_equal(
+        quasar_circuit,
+        qu.Quasar.from_qiskit(qu.Quasar.to_qiskit(quasar_circuit)),
+        Simulator.quasar
+    )
+    assert_equal(
+        qiskit_circuit,
+        qu.Qiskit.from_quasar(qu.Qiskit.to_quasar(qiskit_circuit)),
+        Simulator.qiskit
+    )
+
+
+# begin explicit tests with explicit circuits
+
+def all_tests(qusetta_circuit, cirq_circuit, qiskit_circuit, quasar_circuit):
+    cirq_vs_qusetta(cirq_circuit, qusetta_circuit)
+    qiskit_vs_qusetta(qiskit_circuit, qusetta_circuit)
+    quasar_vs_qusetta(quasar_circuit, qusetta_circuit)
+    cirq_vs_qiskit(cirq_circuit, qiskit_circuit)
+    cirq_vs_quasar(cirq_circuit, quasar_circuit)
+    qiskit_vs_quasar(qiskit_circuit, quasar_circuit)
+
+
+def test_circuit_0():
+    qusetta_circuit = [
         "H(0)", "H(1)", "CX(0, 1)", "CX(1, 0)", "CZ(2, 0)",
         "I(1)", "SWAP(0, 3)", "RY(PI)(1)", "X(2)", "S(0)",
         "Z(2)", "Y(3)", "RX(0.4*PI)(0)", "T(2)", "RZ(-0.3*PI)(2)"
     ]
 
-
-def cirq_circuit():
-    c = cirq.Circuit()
+    cirq_circuit = cirq.Circuit()
     q = [cirq.LineQubit(i) for i in range(4)]
-    c.append(cirq.H(q[0]))
-    c.append(cirq.H(q[1]))
-    c.append(cirq.CX(q[0], q[1]))
-    c.append(cirq.CX(q[1], q[0]))
-    c.append(cirq.CZ(q[2], q[0]))
-    c.append(cirq.I(q[1]))
-    c.append(cirq.SWAP(q[0], q[3]))
-    c.append(cirq.ry(pi)(q[1]))
-    c.append(cirq.X(q[2]))
-    c.append(cirq.S(q[0]))
-    c.append(cirq.Z(q[2]))
-    c.append(cirq.Y(q[3]))
-    c.append(cirq.rx(.4*pi)(q[0]))
-    c.append(cirq.T(q[2]))
-    c.append(cirq.rz(-.3*pi)(q[2]))
-    return c
+    cirq_circuit.append(cirq.H(q[0]))
+    cirq_circuit.append(cirq.H(q[1]))
+    cirq_circuit.append(cirq.CX(q[0], q[1]))
+    cirq_circuit.append(cirq.CX(q[1], q[0]))
+    cirq_circuit.append(cirq.CZ(q[2], q[0]))
+    cirq_circuit.append(cirq.I(q[1]))
+    cirq_circuit.append(cirq.SWAP(q[0], q[3]))
+    cirq_circuit.append(cirq.ry(pi)(q[1]))
+    cirq_circuit.append(cirq.X(q[2]))
+    cirq_circuit.append(cirq.S(q[0]))
+    cirq_circuit.append(cirq.Z(q[2]))
+    cirq_circuit.append(cirq.Y(q[3]))
+    cirq_circuit.append(cirq.rx(.4*pi)(q[0]))
+    cirq_circuit.append(cirq.T(q[2]))
+    cirq_circuit.append(cirq.rz(-.3*pi)(q[2]))
 
+    # ibm is weird so we flip all of the qubits here
+    qiskit_circuit = qiskit.QuantumCircuit(4)
+    qiskit_circuit.h(3-0)
+    qiskit_circuit.h(3-1)
+    qiskit_circuit.cx(3-0, 3-1)
+    qiskit_circuit.cx(3-1, 3-0)
+    qiskit_circuit.cz(3-2, 3-0)
+    qiskit_circuit.i(3-1)
+    qiskit_circuit.swap(3-0, 3-3)
+    qiskit_circuit.ry(pi, 3-1)
+    qiskit_circuit.x(3-2)
+    qiskit_circuit.s(3-0)
+    qiskit_circuit.z(3-2)
+    qiskit_circuit.y(3-3)
+    qiskit_circuit.rx(.4*pi, 3-0)
+    qiskit_circuit.t(3-2)
+    qiskit_circuit.rz(-.3*pi, 3-2)
 
-def qiskit_circuit():
-    c = qiskit.QuantumCircuit()
-    c.h(0)
-    c.h(1)
-    c.cx(0, 1)
-    c.cx(1, 0)
-    c.cz(2, 0)
-    c.i(1)
-    c.swap(0, 3)
-    c.ry(pi, 1)
-    c.x(2)
-    c.s(0)
-    c.z(2)
-    c.y(3)
-    c.rx(.4*pi, 0)
-    c.t(2)
-    c.rz(-.3*pi, 2)
-    return c
+    quasar_circuit = quasar.Circuit()
+    quasar_circuit.H(0)
+    quasar_circuit.H(1)
+    quasar_circuit.CX(0, 1)
+    quasar_circuit.CX(1, 0)
+    quasar_circuit.CZ(2, 0)
+    quasar_circuit.I(1)
+    quasar_circuit.SWAP(0, 3)
+    quasar_circuit.Ry(1, pi)
+    quasar_circuit.X(2)
+    quasar_circuit.S(0)
+    quasar_circuit.Z(2)
+    quasar_circuit.Y(3)
+    quasar_circuit.Rx(0, .2*pi)
+    quasar_circuit.T(2)
+    quasar_circuit.Rz(2, -.15*pi)
 
-
-def quasar_circuit():
-    c = quasar.Circuit()
-    c.H(0)
-    c.H(1)
-    c.CX(0, 1)
-    c.CX(1, 0)
-    c.CZ(2, 0)
-    c.I(1)
-    c.SWAP(0, 3)
-    c.Ry(1, pi)
-    c.X(2)
-    c.S(0)
-    c.Z(2)
-    c.Y(3)
-    c.Rx(0, .2*pi)
-    c.T(2)
-    c.Rz(2, -.15*pi)
-    return c
-
-
-def test_cirq_vs_qusetta():
-    c, q = cirq_circuit(), qu_circuit()
-    assert qu.Cirq.from_qusetta(q) == c
-    assert qu.Cirq.to_qusetta(c) == q
-
-    sim = cirq.Simulator()
-    assert sim.simulate(c) == sim.simulate(qu.Cirq.from_qusetta(q))
-
-
-def test_qiskit_vs_qusetta():
-    return
-    c, q = qiskit_circuit(), qu_circuit()
-    assert qu.Qiskit.from_qusetta(q) == c
-    assert qu.Qiskit.to_qusetta(c) == q
-
-
-def test_cirq_vs_qiskit():
-    return
-    c, q = cirq_circuit(), qiskit_circuit()
-    assert qu.Cirq.from_qiskit(q) == c
-    assert qu.Qiskit.to_cirq(q) == c
-    assert qu.Cirq.to_qiskit(c) == q
-    assert qu.Qiskit.from_cirq(c) == q
-
-    sim = cirq.Simulator()
-    assert sim.simulate(c) == sim.simulate(qu.Cirq.from_qiskit(q))
+    # tests
+    all_tests(qusetta_circuit, cirq_circuit, qiskit_circuit, quasar_circuit)

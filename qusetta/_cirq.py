@@ -1,16 +1,14 @@
-"""Translating circuits to and from ``cirq``.
-
-"""
+"""Translating circuits to and from ``cirq``."""
 
 import cirq
 import qusetta as qu
 from typing import List
-from math import pi as PI
-# define PI so that in string gates we can have pi as an angle.
-# Because we use eval for string gates. For example, gate = "Rz(PI/2, 1)".
 
 
 __all__ = "Cirq",
+
+
+MAPPING = {"RX": "rx", "RY": "ry", "RZ": "rz"}
 
 
 class Cirq(qu.Conversions):
@@ -57,25 +55,12 @@ class Cirq(qu.Conversions):
         """
         cirq_circuit = cirq.Circuit()
         for gate in circuit:
-            i = gate.index('(')
-            g = gate[:i].strip().upper()
-            gate = gate[i+1:]
-            if g in qu.PARAMETER_GATES:
-                j = gate.index(")")
-                params = [float(eval(x)) for x in gate[:j].split(',')]
-                i = gate.index('(')
-                gate = gate[i+1:]
-                j = gate.index(')')
-                qubits = [cirq.LineQubit(int(x)) for x in gate[:j].split(',')]
-                if g in ("RX", "RY", "RZ"):
-                    g = g.lower()
-                cirq_circuit.append(eval("cirq." + g)(*params)(*qubits))
-            elif g in qu.PARAMETER_FREE_GATES:
-                j = gate.index(")")
-                qubits = [cirq.LineQubit(int(x)) for x in gate[:j].split(',')]
-                cirq_circuit.append(eval("cirq." + g)(*qubits))
-            else:
-                raise NotImplementedError("%s is not recognized" % g)
+            g, params, qubits = qu.gate_info(gate)
+            qubits = [cirq.LineQubit(x) for x in qubits]
+            cirq_gate = getattr(cirq, MAPPING.get(g, g))
+            if params:
+                cirq_gate = cirq_gate(*params)
+            cirq_circuit.append(cirq_gate(*qubits))
 
         return cirq_circuit
 

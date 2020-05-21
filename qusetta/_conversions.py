@@ -1,6 +1,4 @@
-"""Parent class for conversions.
-
-"""
+"""Parent class for conversions."""
 
 import cirq
 import qiskit

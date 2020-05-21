@@ -1,6 +1,4 @@
-"""Translating circuits to and from ``quasar``.
-
-"""
+"""Translating circuits to and from ``quasar``."""
 
 import quasar
 import qusetta as qu
@@ -11,6 +9,9 @@ from math import pi as PI
 
 
 __all__ = "Quasar",
+
+
+MAPPING = {"RX": "Rx", "RY": "Ry", "RZ": "Rz"}
 
 
 class Quasar(qu.Conversions):
@@ -54,7 +55,13 @@ class Quasar(qu.Conversions):
         >>> quasar_circuit = Quasar.from_qusetta(circuit)
 
         """
-        raise NotImplementedError
+        quasar_circuit = quasar.Circuit()
+        for gate in circuit:
+            g, params, qubits = qu.gate_info(gate)
+            # qusetta's angles are twice what quasars are
+            params = tuple(x / 2 for x in params)
+            getattr(quasar_circuit, MAPPING.get(g, g))(*(qubits + params))
+        return quasar_circuit
 
     @staticmethod
     def to_qusetta(circuit: quasar.Circuit) -> List[str]:
@@ -85,5 +92,14 @@ class Quasar(qu.Conversions):
         ["H(0)", "CX(0, 1)", "RX(0.5)(0)", "SWAP(1, 2)"]
 
         """
-        # check the result above after I implement it!
-        raise NotImplementedError
+        qu_circuit = []
+        for (_, qubits), gate in circuit.gates.items():  # _ has time info
+            g = gate.name.upper()
+            if gate.parameters:
+                g += "(" + ", ".join(
+                    str(x * 2)  # quasar's angles are half what qusetta's are.
+                    for x in gate.parameters.values()
+                ) + ")"
+            g += "(" + ", ".join(str(q) for q in qubits) + ")"
+            qu_circuit.append(g)
+        return qu_circuit
