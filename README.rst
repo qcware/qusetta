@@ -32,7 +32,7 @@ To install from source:
 Example usage
 -------------
 
-Please see ``help(qusetta)`` for all the functionality in ``qusetta``. The circuit representations that we support converting between are listed in ``qusetta.__all__``.
+Please see ``help(qusetta)`` for all the functionality in *qusetta*. The circuit representations that we support converting between are listed in ``qusetta.__all__``.
 
 Convert a qiskit circuit to cirq and quasar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -84,8 +84,8 @@ A *qusetta* circuit is simply a list of strings, all uppercase, where each strin
 
 - a Hadamard gate on qubit 0 looks like :code:`"H(0)"`,
 - a CX gate with qubit 0 being the control and qubit 2 the target looks like :code:`"CX(0, 2)"`,
-- an Rx gate by an angle of 1.2 on qubit 1 looks like :code:`"RX(1.2)(1)"` (note that the parameters and qubits go in separate parenthese),
-- an Rz gate by an angle of pi/4 on qubit 0 looks like :code:`"RZ(PI/2)(0)"` (note how qusetta can evaluate the expression `PI/2`),
+- an Rx gate by an angle of 1.2 on qubit 1 looks like :code:`"RX(1.2)(1)"` (note that the parameters and qubits go in separate parentheses),
+- an Rz gate by an angle of pi/4 on qubit 0 looks like :code:`"RZ(PI/2)(0)"` (note how qusetta can evaluate the expression ``PI/2``),
 - etc.
 
 We can specify our circuit in *qusetta* form, and then translate it to all the other circuit types.
@@ -94,7 +94,7 @@ We can specify our circuit in *qusetta* form, and then translate it to all the o
 
     from qusetta import Qiskit, Cirq, Quasar
 
-    qusetta_circuit = ["H(0)", "CX(0, 1)", "RY(PI/3, 2)", "T(1)", "S(0)"]
+    qusetta_circuit = ["H(0)", "CX(0, 1)", "RY(PI/3)(2)", "T(1)", "S(0)"]
 
     qiskit_circuit = Qiskit.from_qusetta(qusetta_circuit)
     cirq_circuit = Cirq.from_qusetta(qusetta_circuit)
