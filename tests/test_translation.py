@@ -8,7 +8,7 @@ resulting probability distribution is the same; that's all we care about.
 import cirq
 import qiskit
 import quasar
-import qusetta as qu
+import qusetta as qs
 from math import pi
 import numpy as np
 import random
@@ -50,12 +50,12 @@ def assert_equal(c0, c1, simulator0, simulator1=None):
 def cirq_vs_qusetta(cirq_circuit, qusetta_circuit):
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_qusetta(qusetta_circuit),
+        qs.Cirq.from_qusetta(qusetta_circuit),
         Simulator.cirq
     )
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_qusetta(qu.Cirq.to_qusetta(cirq_circuit)),
+        qs.Cirq.from_qusetta(qs.Cirq.to_qusetta(cirq_circuit)),
         Simulator.cirq
     )
 
@@ -63,12 +63,12 @@ def cirq_vs_qusetta(cirq_circuit, qusetta_circuit):
 def qiskit_vs_qusetta(qiskit_circuit, qusetta_circuit):
     assert_equal(
         qiskit_circuit,
-        qu.Qiskit.from_qusetta(qusetta_circuit),
+        qs.Qiskit.from_qusetta(qusetta_circuit),
         Simulator.qiskit
     )
     assert_equal(
         qiskit_circuit,
-        qu.Qiskit.from_qusetta(qu.Qiskit.to_qusetta(qiskit_circuit)),
+        qs.Qiskit.from_qusetta(qs.Qiskit.to_qusetta(qiskit_circuit)),
         Simulator.qiskit
     )
 
@@ -76,12 +76,12 @@ def qiskit_vs_qusetta(qiskit_circuit, qusetta_circuit):
 def quasar_vs_qusetta(quasar_circuit, qusetta_circuit):
     assert_equal(
         quasar_circuit,
-        qu.Quasar.from_qusetta(qusetta_circuit),
+        qs.Quasar.from_qusetta(qusetta_circuit),
         Simulator.quasar
     )
     assert_equal(
         quasar_circuit,
-        qu.Quasar.from_qusetta(qu.Quasar.to_qusetta(quasar_circuit)),
+        qs.Quasar.from_qusetta(qs.Quasar.to_qusetta(quasar_circuit)),
         Simulator.quasar
     )
 
@@ -95,32 +95,32 @@ def cirq_vs_qiskit(cirq_circuit, qiskit_circuit):
     )
     assert_equal(
         cirq_circuit,
-        qu.Qiskit.to_cirq(qiskit_circuit),
+        qs.Qiskit.to_cirq(qiskit_circuit),
         Simulator.cirq
     )
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_qiskit(qiskit_circuit),
+        qs.Cirq.from_qiskit(qiskit_circuit),
         Simulator.cirq
     )
     assert_equal(
-        qu.Qiskit.from_cirq(cirq_circuit),
+        qs.Qiskit.from_cirq(cirq_circuit),
         qiskit_circuit,
         Simulator.qiskit
     )
     assert_equal(
-        qu.Cirq.to_qiskit(cirq_circuit),
+        qs.Cirq.to_qiskit(cirq_circuit),
         qiskit_circuit,
         Simulator.qiskit
     )
     assert_equal(
         qiskit_circuit,
-        qu.Qiskit.from_cirq(qu.Qiskit.to_cirq(qiskit_circuit)),
+        qs.Qiskit.from_cirq(qs.Qiskit.to_cirq(qiskit_circuit)),
         Simulator.qiskit
     )
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_qiskit(qu.Cirq.to_qiskit(cirq_circuit)),
+        qs.Cirq.from_qiskit(qs.Cirq.to_qiskit(cirq_circuit)),
         Simulator.cirq
     )
 
@@ -134,32 +134,32 @@ def cirq_vs_quasar(cirq_circuit, quasar_circuit):
     )
     assert_equal(
         cirq_circuit,
-        qu.Quasar.to_cirq(quasar_circuit),
+        qs.Quasar.to_cirq(quasar_circuit),
         Simulator.cirq
     )
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_quasar(quasar_circuit),
+        qs.Cirq.from_quasar(quasar_circuit),
         Simulator.cirq
     )
     assert_equal(
-        qu.Quasar.from_cirq(cirq_circuit),
+        qs.Quasar.from_cirq(cirq_circuit),
         quasar_circuit,
         Simulator.quasar
     )
     assert_equal(
-        qu.Cirq.to_quasar(cirq_circuit),
+        qs.Cirq.to_quasar(cirq_circuit),
         quasar_circuit,
         Simulator.quasar
     )
     assert_equal(
         quasar_circuit,
-        qu.Quasar.from_cirq(qu.Quasar.to_cirq(quasar_circuit)),
+        qs.Quasar.from_cirq(qs.Quasar.to_cirq(quasar_circuit)),
         Simulator.quasar
     )
     assert_equal(
         cirq_circuit,
-        qu.Cirq.from_quasar(qu.Cirq.to_quasar(cirq_circuit)),
+        qs.Cirq.from_quasar(qs.Cirq.to_quasar(cirq_circuit)),
         Simulator.cirq
     )
 
@@ -173,32 +173,32 @@ def qiskit_vs_quasar(qiskit_circuit, quasar_circuit):
     )
     assert_equal(
         qiskit_circuit,
-        qu.Quasar.to_qiskit(quasar_circuit),
+        qs.Quasar.to_qiskit(quasar_circuit),
         Simulator.qiskit
     )
     assert_equal(
         qiskit_circuit,
-        qu.Qiskit.from_quasar(quasar_circuit),
+        qs.Qiskit.from_quasar(quasar_circuit),
         Simulator.qiskit
     )
     assert_equal(
-        qu.Quasar.from_qiskit(qiskit_circuit),
+        qs.Quasar.from_qiskit(qiskit_circuit),
         quasar_circuit,
         Simulator.quasar
     )
     assert_equal(
-        qu.Qiskit.to_quasar(qiskit_circuit),
+        qs.Qiskit.to_quasar(qiskit_circuit),
         quasar_circuit,
         Simulator.quasar
     )
     assert_equal(
         quasar_circuit,
-        qu.Quasar.from_qiskit(qu.Quasar.to_qiskit(quasar_circuit)),
+        qs.Quasar.from_qiskit(qs.Quasar.to_qiskit(quasar_circuit)),
         Simulator.quasar
     )
     assert_equal(
         qiskit_circuit,
-        qu.Qiskit.from_quasar(qu.Qiskit.to_quasar(qiskit_circuit)),
+        qs.Qiskit.from_quasar(qs.Qiskit.to_quasar(qiskit_circuit)),
         Simulator.qiskit
     )
 
@@ -218,7 +218,8 @@ def test_circuit_0():
     qusetta_circuit = [
         "H(0)", "H(1)", "CX(0, 1)", "CX(1, 0)", "CZ(2, 0)",
         "I(1)", "SWAP(0, 3)", "RY(PI)(1)", "X(2)", "S(0)",
-        "Z(2)", "Y(3)", "RX(0.4*PI)(0)", "T(2)", "RZ(-0.3*PI)(2)"
+        "Z(2)", "Y(3)", "RX(0.4*PI)(0)", "T(2)", "RZ(-0.3*PI)(2)",
+        "CCX(0, 1, 2)"
     ]
 
     cirq_circuit = cirq.Circuit()
@@ -238,6 +239,7 @@ def test_circuit_0():
     cirq_circuit.append(cirq.rx(.4*pi)(q[0]))
     cirq_circuit.append(cirq.T(q[2]))
     cirq_circuit.append(cirq.rz(-.3*pi)(q[2]))
+    cirq_circuit.append(cirq.CCX(q[0], q[1], q[2]))
 
     # ibm is weird so we flip all of the qubits here
     qiskit_circuit = qiskit.QuantumCircuit(4)
@@ -256,6 +258,7 @@ def test_circuit_0():
     qiskit_circuit.rx(.4*pi, 3-0)
     qiskit_circuit.t(3-2)
     qiskit_circuit.rz(-.3*pi, 3-2)
+    qiskit_circuit.ccx(3-0, 3-1, 3-2)
 
     quasar_circuit = quasar.Circuit()
     quasar_circuit.H(0)
@@ -273,6 +276,31 @@ def test_circuit_0():
     quasar_circuit.Rx(0, .2*pi)
     quasar_circuit.T(2)
     quasar_circuit.Rz(2, -.15*pi)
+    quasar_circuit.CCX(0, 1, 2)
+
+    # tests
+    all_tests(qusetta_circuit, cirq_circuit, qiskit_circuit, quasar_circuit)
+
+
+def test_circuit_1():
+    # test qiskit's u1, u2, and u3 gates
+
+    qiskit_circuit = qiskit.QuantumCircuit(4)
+    qiskit_circuit.h(0)
+    qiskit_circuit.h(2)
+    qiskit_circuit.u1(pi/6, 1)
+    qiskit_circuit.u2(1, 2, 0)
+    qiskit_circuit.ccx(1, 0, 3)
+    qiskit_circuit.ccx(0, 1, 2)
+    qiskit_circuit.u3(1, 2, 3, 1)
+    qiskit_circuit.rx(pi/3, 1)
+    qiskit_circuit.u3(1.56, 1.24, 1.69, 2)
+    qiskit_circuit.u2(1.2, 5.1, 1)
+    qiskit_circuit.u1(6.542, 0)
+
+    qusetta_circuit = qs.Qiskit.to_qusetta(qiskit_circuit)
+    cirq_circuit = qs.Cirq.from_qusetta(qusetta_circuit)
+    quasar_circuit = qs.Quasar.from_qusetta(qusetta_circuit)
 
     # tests
     all_tests(qusetta_circuit, cirq_circuit, qiskit_circuit, quasar_circuit)

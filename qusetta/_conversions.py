@@ -3,7 +3,7 @@
 import cirq
 import qiskit
 import quasar
-import qusetta as qu
+import qusetta as qs
 
 __all__ = 'Conversions',
 
@@ -15,6 +15,9 @@ class Conversions:
     ``qusetta.Cirq`` inherits from Conversions, and therefore
     has all of the conversions to and from the different circuit
     representations (ie qiskit, quasar, etc).
+
+    A child class *must* define a ``to_qusetta`` and a ``from_qusetta``
+    staticmethod.
 
     """
 
@@ -32,7 +35,7 @@ class Conversions:
         cls_circuit : cls object.
 
         """
-        return cls.from_qusetta(qu.Cirq.to_qusetta(circuit))
+        return cls.from_qusetta(qs.Cirq.to_qusetta(circuit))
 
     @classmethod
     def to_cirq(cls, circuit: 'cls') -> cirq.Circuit:
@@ -48,7 +51,7 @@ class Conversions:
         cirq_circuit : cirq.Circuit object.
 
         """
-        return qu.Cirq.from_qusetta(cls.to_qusetta(circuit))
+        return qs.Cirq.from_qusetta(cls.to_qusetta(circuit))
 
     @classmethod
     def from_qiskit(cls, circuit: qiskit.QuantumCircuit) -> 'cls':
@@ -64,7 +67,7 @@ class Conversions:
         cls_circuit : cls object.
 
         """
-        return cls.from_qusetta(qu.Qiskit.to_qusetta(circuit))
+        return cls.from_qusetta(qs.Qiskit.to_qusetta(circuit))
 
     @classmethod
     def to_qiskit(cls, circuit: 'cls') -> qiskit.QuantumCircuit:
@@ -80,7 +83,7 @@ class Conversions:
         qiskit_circuit : qiskit.QuantumCircuit object.
 
         """
-        return qu.Qiskit.from_qusetta(cls.to_qusetta(circuit))
+        return qs.Qiskit.from_qusetta(cls.to_qusetta(circuit))
 
     @classmethod
     def from_quasar(cls, circuit: quasar.Circuit) -> 'cls':
@@ -96,7 +99,7 @@ class Conversions:
         cls_circuit : cls object.
 
         """
-        return cls.from_qusetta(qu.Quasar.to_qusetta(circuit))
+        return cls.from_qusetta(qs.Quasar.to_qusetta(circuit))
 
     @classmethod
     def to_quasar(cls, circuit: 'cls') -> quasar.Circuit:
@@ -112,4 +115,4 @@ class Conversions:
         quasar_circuit : quasar.Circuit object.
 
         """
-        return qu.Quasar.from_qusetta(cls.to_qusetta(circuit))
+        return qs.Quasar.from_qusetta(cls.to_qusetta(circuit))

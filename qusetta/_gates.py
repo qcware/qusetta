@@ -9,7 +9,7 @@ __all__ = "PARAMETER_FREE_GATES", "PARAMETER_GATES", "gate_info"
 
 
 PARAMETER_FREE_GATES = frozenset({
-    "I", "H", "X", "Y", "Z", "S", "T", "CX", "CZ", 'SWAP'
+    "I", "H", "X", "Y", "Z", "S", "T", "CX", "CZ", "SWAP", "CCX"
 })
 
 PARAMETER_GATES = frozenset({'RX', 'RY', 'RZ'})

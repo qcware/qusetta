@@ -1,7 +1,7 @@
 """Translating circuits to and from ``quasar``."""
 
 import quasar
-import qusetta as qu
+import qusetta as qs
 from typing import List
 from math import pi as PI
 # define PI so that in string gates we can have pi as an angle.
@@ -14,7 +14,7 @@ __all__ = "Quasar",
 MAPPING = {"RX": "Rx", "RY": "Ry", "RZ": "Rz"}
 
 
-class Quasar(qu.Conversions):
+class Quasar(qs.Conversions):
     """Translation methods for quasar's representation of a circuit.
 
     Example
@@ -57,7 +57,7 @@ class Quasar(qu.Conversions):
         """
         quasar_circuit = quasar.Circuit()
         for gate in circuit:
-            g, params, qubits = qu.gate_info(gate)
+            g, params, qubits = qs.gate_info(gate)
             # qusetta's angles are twice what quasars are
             params = tuple(x / 2 for x in params)
             getattr(quasar_circuit, MAPPING.get(g, g))(*(qubits + params))
@@ -73,7 +73,7 @@ class Quasar(qu.Conversions):
 
         Returns
         -------
-        qu_circuit : list of strings.
+        qs_circuit : list of strings.
             See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
@@ -92,7 +92,7 @@ class Quasar(qu.Conversions):
         ["H(0)", "CX(0, 1)", "RX(0.5)(0)", "SWAP(1, 2)"]
 
         """
-        qu_circuit = []
+        qs_circuit = []
         for (_, qubits), gate in circuit.gates.items():  # _ has time info
             g = gate.name.upper()
             if gate.parameters:
@@ -101,5 +101,5 @@ class Quasar(qu.Conversions):
                     for x in gate.parameters.values()
                 ) + ")"
             g += "(" + ", ".join(str(q) for q in qubits) + ")"
-            qu_circuit.append(g)
-        return qu_circuit
+            qs_circuit.append(g)
+        return qs_circuit

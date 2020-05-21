@@ -1,7 +1,7 @@
 """Translating circuits to and from ``cirq``."""
 
 import cirq
-import qusetta as qu
+import qusetta as qs
 from typing import List
 
 
@@ -11,7 +11,7 @@ __all__ = "Cirq",
 MAPPING = {"RX": "rx", "RY": "ry", "RZ": "rz"}
 
 
-class Cirq(qu.Conversions):
+class Cirq(qs.Conversions):
     """Translation methods for cirq's representation of a circuit.
 
     Example
@@ -55,7 +55,7 @@ class Cirq(qu.Conversions):
         """
         cirq_circuit = cirq.Circuit()
         for gate in circuit:
-            g, params, qubits = qu.gate_info(gate)
+            g, params, qubits = qs.gate_info(gate)
             qubits = [cirq.LineQubit(x) for x in qubits]
             cirq_gate = getattr(cirq, MAPPING.get(g, g))
             if params:
@@ -74,7 +74,7 @@ class Cirq(qu.Conversions):
 
         Returns
         -------
-        qu_circuit : list of strings.
+        qs_circuit : list of strings.
             See ``help(qusetta)`` for more details on how the list of
             strings should be formatted.
 
@@ -95,12 +95,14 @@ class Cirq(qu.Conversions):
 
         """
         return [
-            str(gate).replace(
+            str(gate).strip().upper().replace(
                 "CNOT", "CX"
             ).replace(
-                "π", "PI" if (
+                "TOFFOLI", "CCX"
+            ).replace(
+                "Π", "PI" if (
                     hasattr(gate.gate, "exponent") and gate.gate.exponent == 1
                 ) else "*PI"
-            ).upper().strip()
+            )
             for gate in circuit.all_operations()
         ]

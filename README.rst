@@ -8,7 +8,6 @@ Translating quantum circuits to and from representations -- the Rosetta Stone fo
 
 *master branch*  --->   |master_branch_circleci|
 
-*Circle CI fails right now because I have it just trying to import "quasar". Once quasar is open-sourced, then the Circle CI should start passing.*
 
 **README contents**
 
@@ -85,7 +84,7 @@ A *qusetta* circuit is simply a list of strings, all uppercase, where each strin
 - a Hadamard gate on qubit 0 looks like :code:`"H(0)"`,
 - a CX gate with qubit 0 being the control and qubit 2 the target looks like :code:`"CX(0, 2)"`,
 - an Rx gate by an angle of 1.2 on qubit 1 looks like :code:`"RX(1.2)(1)"` (note that the parameters and qubits go in separate parentheses),
-- an Rz gate by an angle of pi/4 on qubit 0 looks like :code:`"RZ(PI/2)(0)"` (note how qusetta can evaluate the expression ``PI/2``),
+- an Rz gate by an angle of pi/2 on qubit 0 looks like :code:`"RZ(PI/2)(0)"` (note how qusetta can evaluate the expression ``PI/2``),
 - etc.
 
 We can specify our circuit in *qusetta* form, and then translate it to all the other circuit types.
@@ -107,6 +106,7 @@ Important details about the translation
 Consider starting with a circuit cA written with A (e.g. A could be cirq, qiskit, etc). Then we use *qusetta* to translate to B, C, etc, therefore creating cB, cC, etc. The translations are defined such that simulating cA with A will give the same probability vector as simulating cB with B, cC with C, etc. A few things to note.
 
 - The simulations will give the same *probability vector* but not necessarily give the same *state vector*; they may be off by global phases.
+- The translations will ensure that the circuits give the same probability vector, but the circuits themselves may not be equivalent. Gate ordering will often be different through translations.
 - As we all know, qiskit is weird in the way that they index their qubits. In particular, they index qubits in reverse order compared to everyone else. Therefore, in order to ensure that the first bullet point is true, *qusetta* reverses the qubits of a qiskit circuit. Thus, as an example, a qusetta (or cirq, quasar) circuit ``["H(0)", "CX(0, 1)"]`` becomes a qiskit circuit ``["H(1)", "CX(1, 0)"]``. This is how we guarantee that the probability vectors are the same.
 
 
@@ -135,5 +135,6 @@ To do
 -----
 
 - Do something with measurement gates.
-- I also probably need to support for more gates, like qiskit u3 gates.
+- I also probably need to support for more gates.
 - Add more circuit tests (e.g. ``test_circuit_1``, ``test_circuit_2``, etc).
+- Once quasar is open-sourced, uncomment the "toxify" line in ``.circleci/config.yml`` so CircleCI actually tests everything.
