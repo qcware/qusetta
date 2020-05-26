@@ -5,7 +5,7 @@ pydocstyle==4.0.1
 pytest==4.3.1
 pytest-cov==2.7.1
 qiskit>=0.19.0
-quasar
 setuptools
 twine
 wheel
+git+https://github.com/qcware/quasar.git
