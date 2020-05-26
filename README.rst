@@ -135,6 +135,6 @@ To do
 -----
 
 - Do something with measurement gates.
-- I also probably need to support for more gates.
-- Add more circuit tests (e.g. ``test_circuit_1``, ``test_circuit_2``, etc).
-- Once quasar is open-sourced, uncomment the "toxify" line in ``.circleci/config.yml`` so CircleCI actually tests everything.
+- Add more circuit tests (e.g. ``test_circuit_2``, ``test_circuit_3``, etc).
+- More gates.
+- If quasar becomes ``pip`` installable, then change the ``git`` link in  ``requirements.txt`` and ``requirements-dev.txt`` to just ``quasar``; then remove the dependency links stuff in ``setup.py``.
