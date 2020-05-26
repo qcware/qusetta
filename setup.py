@@ -11,7 +11,13 @@ import setuptools
 with open('README.rst') as f:
     README = f.read()
 
+REQUIREMENTS, DEPENDENCY_LINKS = [], []
 with open("requirements.txt") as f:
+    for line in f:
+        if line.startswith("git"):
+            DEPENDENCY_LINKS.append(line.strip())
+        else:
+            REQUIREMENTS.append(line.strip())
     REQUIREMENTS = [line.strip() for line in f if line.strip()]
 
 # get __version__, __author__, etc.
@@ -32,6 +38,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=("tests", "docs")),
     test_suite="tests",
     install_requires=REQUIREMENTS,
+    depedency_links=DEPENDENCY_LINKS,
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
