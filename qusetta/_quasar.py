@@ -3,9 +3,6 @@
 import quasar
 import qusetta as qs
 from typing import List
-from math import pi as PI
-# define PI so that in string gates we can have pi as an angle.
-# Because we use eval for string gates. For example, gate = "Rz(PI/2, 1)".
 
 
 __all__ = "Quasar",
