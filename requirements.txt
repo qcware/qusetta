@@ -1,0 +1,3 @@
+cirq>=0.8.0
+qiskit>=0.19.0
+qcware-quasar>=1.0.0
