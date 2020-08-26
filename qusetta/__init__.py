@@ -22,8 +22,21 @@ from ._version import *
 
 from ._gates import *
 from ._conversions import *
-from ._cirq import *
-from ._qiskit import *
+import warnings
+
+try:
+    import qiskit
+    from ._qiskit import *
+except (ImportError, ModuleNotFoundError) as e:
+    pass
+
+
+try:
+    import cirq
+    from ._cirq import *
+except (ImportError, ModuleNotFoundError) as e:
+    pass
+
 from ._quasar import *
 
 __all__ = "Cirq", "Qiskit", "Quasar"

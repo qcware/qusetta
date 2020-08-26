@@ -1,5 +1,4 @@
 """Translating circuits to and from ``cirq``."""
-
 import cirq
 import qusetta as qs
 from typing import List

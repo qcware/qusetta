@@ -11,9 +11,6 @@ import setuptools
 with open('README.rst') as f:
     README = f.read()
 
-with open("requirements.txt") as f:
-    REQUIREMENTS = [line.strip() for line in f if line.strip()]
-
 # get __version__, __author__, etc.
 with open("qusetta/_version.py") as f:
     exec(f.read())
@@ -31,7 +28,13 @@ setuptools.setup(
     license=__license__,
     packages=setuptools.find_packages(exclude=("tests", "docs")),
     test_suite="tests",
-    install_requires=REQUIREMENTS,
+    install_requires=[
+        "qcware-quasar>=1.0.0"
+        ],
+    extras_require={
+        "cirq": ["cirq>=0.8.0"],
+        "qiskit": ["qiskit>=0.19.0"]
+        },
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
