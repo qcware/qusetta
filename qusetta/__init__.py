@@ -22,23 +22,22 @@ from ._version import *
 
 from ._gates import *
 from ._conversions import *
-import warnings
+from ._quasar import *
+
+__all__ = "Quasar",
 
 try:
     import qiskit
     from ._qiskit import *
+    __all__ += "Qiskit",
 except (ImportError, ModuleNotFoundError) as e:
     pass
-
 
 try:
     import cirq
     from ._cirq import *
+    __all__ += "Cirq",
 except (ImportError, ModuleNotFoundError) as e:
     pass
-
-from ._quasar import *
-
-__all__ = "Cirq", "Qiskit", "Quasar"
 
 name = "qusetta"
