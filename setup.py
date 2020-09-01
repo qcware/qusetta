@@ -33,7 +33,7 @@ setuptools.setup(
         ],
     extras_require={
         "cirq": ["cirq>=0.8.0"],
-        "qiskit": ["qiskit>=0.19.0"]
+        "qiskit": ["qiskit-aer>=0.6.0"]
         },
     include_package_data=True,
     classifiers=[
