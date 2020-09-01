@@ -22,10 +22,22 @@ from ._version import *
 
 from ._gates import *
 from ._conversions import *
-from ._cirq import *
-from ._qiskit import *
 from ._quasar import *
 
-__all__ = "Cirq", "Qiskit", "Quasar"
+__all__ = "Quasar",
+
+try:
+    import qiskit
+    from ._qiskit import *
+    __all__ += "Qiskit",
+except (ImportError, ModuleNotFoundError) as e:
+    pass
+
+try:
+    import cirq
+    from ._cirq import *
+    __all__ += "Cirq",
+except (ImportError, ModuleNotFoundError) as e:
+    pass
 
 name = "qusetta"

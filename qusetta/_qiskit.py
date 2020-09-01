@@ -1,5 +1,4 @@
 """Translating circuits to and from ``qiskit``."""
-
 import qiskit
 import qusetta as qs
 from typing import List
